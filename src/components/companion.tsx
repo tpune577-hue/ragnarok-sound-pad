@@ -43,17 +43,10 @@ export function Companion() {
         <div className="relative flex flex-col items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/icons/boardgame/cover.png"
-            alt="Ragnarok the Board Game"
-            draggable={false}
-            className="w-full max-w-xs rounded-3xl border border-gold/40 object-cover shadow-[0_12px_40px_rgba(0,0,0,0.65)]"
-          />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/icons/boardgame/logo.png"
+            src="/icons/boardgame/cover.png?v=2"
             alt="Ragnarok the Board Game: Ceremony of Prontera"
             draggable={false}
-            className="w-full max-w-xs object-contain drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]"
+            className="w-full max-w-xs rounded-3xl border border-gold/40 object-cover shadow-[0_12px_40px_rgba(0,0,0,0.65)]"
           />
           <p className="font-display text-xs tracking-[0.3em] text-gold-soft/90 uppercase">Official Sound Pad</p>
         </div>
