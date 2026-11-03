@@ -42,6 +42,48 @@ body {
   animation: pulse-ring 0.9s ease-out infinite;
 }
 
+.pad {
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent, #d8b45a) 22%, transparent), transparent 70%),
+    linear-gradient(180deg, #232a48, #171c33);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 6px 16px rgba(0, 0, 0, 0.35);
+  -webkit-touch-callout: none;
+}
+
+@keyframes progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.pad-progress {
+  animation: progress linear forwards;
+}
+
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.eq-bar {
+  animation: eq 0.9s ease-in-out infinite;
+  transform-origin: bottom;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
 input[type="range"] {
   accent-color: var(--color-gold);
 }

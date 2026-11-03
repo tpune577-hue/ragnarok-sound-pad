@@ -301,6 +301,16 @@ const RECIPES: Record<SynthId, (v: Voice) => void> = {
     thump(v, 0, 120, 0.5);
   },
   spawn: (v) => v.noise({ a: 0.2, d: 0.3, v: 0.25, filter: "bandpass", f: 200, f2: 2000, q: 2 }).tone({ at: 0.35, f: 200, f2: 400, type: "triangle", d: 0.15, v: 0.15 }),
+  "refine-fail": (v) => {
+    thump(v, 0, 160, 0.5);
+    for (let i = 0; i < 10; i++)
+      v.noise({ at: 0.03 + i * 0.03 + rand(0, 0.03), d: 0.06, v: 0.25, filter: "bandpass", f: rand(3000, 7000), q: 8 });
+    v.notes([N(64), N(60), N(55)], 0.15, { at: 0.35, type: "triangle", d: 0.35, v: 0.1 });
+  },
+  stone: (v) => {
+    for (let i = 0; i < 5; i++) v.noise({ at: i * 0.07, d: 0.09, v: 0.35, filter: "lowpass", f: rand(500, 1100) });
+    thump(v, 0.35, 80, 0.7);
+  },
   "monster-bite": (v) => v.noise({ d: 0.12, v: 0.45, filter: "bandpass", f: 1500, q: 2 }).tone({ f: 260, f2: 120, type: "sawtooth", d: 0.15, v: 0.15 }),
   "monster-heavy": (v) => thump(whoosh(v, 0, 0.25), 0.15, 70, 1).noise({ at: 0.15, d: 0.5, v: 0.3, filter: "lowpass", f: 500, f2: 80 }),
 };

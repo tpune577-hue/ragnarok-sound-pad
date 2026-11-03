@@ -3,13 +3,17 @@ import type { SynthId } from "../lib/audio/synth-ids";
 export const SFX_REMOTE_BASE = "https://mirror.irowiki.org/ragnarok/effects/";
 
 export type SoundDef = {
+  /** Also the file name for a drop-in sound pack: public/audio/pack/<id>.mp3|wav|ogg */
   id: string;
   label: string;
   th?: string;
+  icon: string;
   /** Path relative to SFX_REMOTE_BASE; downloaded to /audio/sfx/<basename>. */
   file?: string;
   synth: SynthId;
 };
+
+export type PadGroup = { id: string; name: string; th: string; sounds: SoundDef[] };
 
 export type ClassId = "swordsman" | "thief" | "mage" | "acolyte" | "archer" | "merchant";
 
@@ -17,6 +21,7 @@ export type ClassBoard = {
   id: ClassId;
   name: string;
   th: string;
+  icon: string;
   class2: string;
   accent: string;
   class1: SoundDef[];
@@ -25,214 +30,215 @@ export type ClassBoard = {
 
 export const sfxUrl = (file: string) => `/audio/sfx/${file.split("/").pop()}`;
 
+export const COMMON_GROUPS: PadGroup[] = [
+  {
+    id: "quick",
+    name: "Quick",
+    th: "ใช้บ่อย",
+    sounds: [
+      { id: "level-up", label: "Level Up", th: "เลเวลอัพ", icon: "⬆️", synth: "levelup" },
+      { id: "mvp", label: "MVP", th: "บอสปรากฏ / ล้มบอส", icon: "👑", synth: "mvp" },
+      { id: "attack", label: "Attack", th: "โจมตีปกติ", icon: "⚔️", synth: "slash" },
+      { id: "hit", label: "Take Damage", th: "โดนโจมตี", icon: "💥", synth: "hit" },
+      { id: "hp-recovery", label: "HP Recovery", th: "ฟื้น HP / ใช้ยา", icon: "🧪", synth: "potion" },
+      { id: "critical", label: "Critical", th: "คริติคอล", icon: "✴️", synth: "crit" },
+      { id: "monster-kill", label: "Monster Down", th: "กำจัดมอนสเตอร์", icon: "💫", synth: "pop" },
+      { id: "death", label: "Character Dies", th: "ตัวละครตาย", icon: "💀", synth: "death" },
+    ],
+  },
+  {
+    id: "table",
+    name: "Table",
+    th: "บนโต๊ะ",
+    sounds: [
+      { id: "login", label: "Game Start", th: "เริ่มเกม", icon: "🚪", synth: "warp" },
+      { id: "dice", label: "Roll Dice", th: "ทอยลูกเต๋า", icon: "🎲", synth: "dice" },
+      { id: "draw-card", label: "Draw Card", th: "จั่วการ์ด", icon: "🃏", synth: "card" },
+      { id: "cooldown", label: "Cooldown", th: "เลื่อน CD", icon: "⏳", synth: "tick" },
+      { id: "move", label: "Move", th: "เดิน", icon: "👣", synth: "footsteps" },
+      { id: "item-drop", label: "Item Drop", th: "ของดรอป", icon: "🎁", synth: "drop" },
+      { id: "refine-success", label: "Refine Success", th: "ตีบวกผ่าน / Unique Drop", icon: "✨", synth: "rare-drop" },
+      { id: "refine-fail", label: "Refine Failed", th: "ตีบวกแตก", icon: "💔", synth: "refine-fail" },
+      { id: "spawn", label: "Spawn", th: "มอนเกิด", icon: "🌀", synth: "spawn" },
+      { id: "respawn", label: "Respawn", th: "เกิดใหม่", icon: "🕊️", synth: "respawn" },
+      { id: "victory", label: "Victory", th: "ชนะฉาก", icon: "🏆", synth: "victory" },
+      { id: "defeat", label: "Defeat", th: "แพ้ฉาก", icon: "🏳️", synth: "defeat" },
+    ],
+  },
+  {
+    id: "status",
+    name: "Status",
+    th: "สถานะผิดปกติ",
+    sounds: [
+      { id: "blind", label: "Blind", th: "ตาบอด", icon: "🕶️", synth: "blind" },
+      { id: "curse", label: "Curse", th: "คำสาป", icon: "🩸", synth: "curse" },
+      { id: "frozen", label: "Freeze", th: "แช่แข็ง", icon: "🧊", synth: "freeze" },
+      { id: "immobilize", label: "Immobilize", th: "ขยับไม่ได้", icon: "⛓️", synth: "immobilize" },
+      { id: "poison", label: "Poison", th: "ติดพิษ", icon: "☠️", synth: "poison" },
+      { id: "sleep", label: "Sleep", th: "หลับ", icon: "💤", synth: "sleep" },
+      { id: "stun", label: "Stun", th: "มึนงง", icon: "💫", synth: "stun" },
+      { id: "stone-curse", label: "Stone Curse", th: "กลายเป็นหิน", icon: "🪨", synth: "stone" },
+    ],
+  },
+];
+
 export const CLASSES: ClassBoard[] = [
   {
     id: "swordsman",
     name: "Swordsman",
     th: "นักดาบ",
-    class2: "Knight / Crusader",
+    icon: "🗡️",
+    class2: "Knight",
     accent: "#e05d44",
     class1: [
-      { id: "sw-bash", label: "Bash", th: "ฟันหนัก", synth: "bash" },
-      { id: "sw-magnum", label: "Magnum Break", th: "ระเบิดไฟรอบตัว", synth: "explosion" },
-      { id: "sw-provoke", label: "Provoke", th: "ยั่วยุ", synth: "provoke" },
-      { id: "sw-endure", label: "Endure", th: "อดทน", synth: "endure" },
+      { id: "bash", label: "Bash", th: "ฟันหนัก", icon: "🗡️", synth: "bash" },
+      { id: "magnum-break", label: "Magnum Break", th: "ระเบิดไฟรอบตัว", icon: "🔥", synth: "explosion" },
+      { id: "provoke", label: "Provoke", th: "ยั่วยุ", icon: "😤", synth: "provoke" },
+      { id: "endure", label: "Endure", th: "อดทน", icon: "🛡️", synth: "endure" },
     ],
     class2Skills: [
-      { id: "sw-bowling", label: "Bowling Bash", th: "ฟันกระเด็น", synth: "heavy-hit" },
-      { id: "sw-brandish", label: "Brandish Spear", th: "กวาดหอก", synth: "multi-slash" },
-      { id: "sw-grandcross", label: "Grand Cross", th: "กางเขนศักดิ์สิทธิ์", synth: "holy" },
-      { id: "sw-battlechant", label: "Battle Chant", th: "บทสวดสงคราม", file: "BattleChant.wav", synth: "holy" },
+      { id: "counter-attack", label: "Counter Attack", th: "สวนกลับ", icon: "↩️", synth: "crit" },
+      { id: "twohand-quicken", label: "Two-Hand Quicken", th: "เร่งความเร็ว", icon: "⚡", synth: "shout" },
+      { id: "bowling-bash", label: "Bowling Bash", th: "ฟันกระเด็น", icon: "🎳", synth: "heavy-hit" },
+      { id: "battle-chant", label: "Battle Chant", th: "บทสวดสงคราม", icon: "📯", file: "BattleChant.wav", synth: "holy" },
     ],
   },
   {
     id: "thief",
     name: "Thief",
     th: "โจร",
-    class2: "Assassin / Rogue",
+    icon: "🥷",
+    class2: "Assassin",
     accent: "#8e6bd8",
     class1: [
-      { id: "th-double", label: "Double Attack", th: "แทงสองครั้ง", synth: "double-slash" },
-      { id: "th-envenom", label: "Envenom", th: "อาบยาพิษ", synth: "poison" },
-      { id: "th-hiding", label: "Hiding", th: "ซ่อนตัว", synth: "stealth" },
-      { id: "th-steal", label: "Steal", th: "ขโมยของ", synth: "coins" },
+      { id: "double-attack", label: "Double Attack", th: "แทงสองครั้ง", icon: "✌️", synth: "double-slash" },
+      { id: "enchant-poison", label: "Envenom", th: "อาบยาพิษ", icon: "🧪", synth: "poison" },
+      { id: "hiding", label: "Hiding", th: "ซ่อนตัว", icon: "🫥", synth: "stealth" },
+      { id: "steal", label: "Steal", th: "ขโมยของ", icon: "💰", synth: "coins" },
     ],
     class2Skills: [
-      { id: "th-sonic", label: "Sonic Blow", th: "ฟันรัว", synth: "multi-slash" },
-      { id: "th-grimtooth", label: "Grimtooth", th: "เขี้ยวมรณะ", synth: "slash" },
-      { id: "th-backstab", label: "Back Stab", th: "แทงข้างหลัง", synth: "crit" },
+      { id: "sonic-blow", label: "Sonic Blow", th: "ฟันรัว", icon: "🌪️", synth: "multi-slash" },
+      { id: "grimtooth", label: "Grimtooth", th: "เขี้ยวมรณะ", icon: "🦷", synth: "slash" },
     ],
   },
   {
     id: "mage",
     name: "Mage",
     th: "นักเวทย์",
-    class2: "Wizard / Sage",
+    icon: "🪄",
+    class2: "Wizard",
     accent: "#4a8fe7",
     class1: [
-      { id: "mg-firebolt", label: "Fire Bolt", th: "ลูกไฟ", synth: "fire" },
-      { id: "mg-coldbolt", label: "Cold Bolt", th: "ลูกน้ำแข็ง", synth: "cold" },
-      { id: "mg-lightning", label: "Lightning Bolt", th: "สายฟ้า", synth: "lightning" },
-      { id: "mg-napalm", label: "Napalm Beat", th: "พลังจิต", synth: "ghost" },
-      { id: "mg-soulstrike", label: "Soul Strike", th: "วิญญาณโจมตี", synth: "soul" },
-      { id: "mg-firewall", label: "Fire Wall", th: "กำแพงไฟ", synth: "wall" },
-      { id: "mg-frostdiver", label: "Frost Diver", th: "แช่แข็ง", synth: "freeze" },
+      { id: "beginspell", label: "Casting", th: "ร่ายเวทย์", icon: "🔮", synth: "focus" },
+      { id: "fireball", label: "Fire Ball", th: "ลูกไฟ", icon: "🔥", synth: "fire" },
+      { id: "frost-diver", label: "Frost Diver", th: "แช่แข็ง", icon: "❄️", synth: "cold" },
+      { id: "thunder-storm", label: "Thunder Storm", th: "พายุสายฟ้า", icon: "⚡", synth: "lightning" },
+      { id: "soul-strike", label: "Soul Strike", th: "วิญญาณโจมตี", icon: "👻", synth: "soul" },
+      { id: "firewall", label: "Fire Wall", th: "กำแพงไฟ", icon: "🧱", synth: "wall" },
+      { id: "safety-wall", label: "Safety Wall", th: "กำแพงป้องกัน", icon: "🛡️", synth: "endure" },
+      { id: "sight", label: "Sight", th: "ส่องหา", icon: "👁️", synth: "chime-up" },
     ],
     class2Skills: [
-      { id: "mg-stormgust", label: "Storm Gust", th: "พายุหิมะ", synth: "storm" },
-      { id: "mg-meteor", label: "Meteor Storm", th: "อุกกาบาต", synth: "meteor" },
-      { id: "mg-lov", label: "Lord of Vermilion", th: "สายฟ้าฟาด", synth: "lightning" },
-      { id: "mg-jupitel", label: "Jupitel Thunder", th: "ลูกบอลสายฟ้า", synth: "soul" },
+      { id: "storm-gust", label: "Storm Gust", th: "พายุหิมะ", icon: "🌨️", synth: "storm" },
+      { id: "meteor-storm", label: "Meteor Storm", th: "อุกกาบาต", icon: "☄️", synth: "meteor" },
+      { id: "earth-spike", label: "Earth Spike", th: "หนามดิน", icon: "⛰️", synth: "heavy-hit" },
+      { id: "fire-pillar", label: "Fire Pillar", th: "เสาไฟ", icon: "🔥", synth: "fire" },
+      { id: "ice-wall", label: "Ice Wall", th: "กำแพงน้ำแข็ง", icon: "🧊", synth: "freeze" },
+      { id: "water-ball", label: "Water Ball", th: "ลูกน้ำ", icon: "💧", synth: "potion" },
+      { id: "quagmire", label: "Quagmire", th: "หล่มโคลน", icon: "🟫", synth: "poison" },
+      { id: "sightrasher", label: "Sightrasher", th: "ระเบิดไฟวงกว้าง", icon: "💥", synth: "explosion" },
     ],
   },
   {
     id: "acolyte",
     name: "Acolyte",
-    th: "ผู้ช่วยนักบวช",
-    class2: "Priest / Monk",
+    th: "อโคไลท์",
+    icon: "✝️",
+    class2: "Priest",
     accent: "#e8c35a",
     class1: [
-      { id: "ac-heal", label: "Heal", th: "ฮีล", file: "Heal.wav", synth: "chime-up" },
-      { id: "ac-blessing", label: "Blessing", th: "อวยพร", file: "Blessing.wav", synth: "chime-up" },
-      { id: "ac-agi", label: "Increase AGI", th: "เพิ่มความเร็ว", synth: "chime-up" },
-      { id: "ac-cure", label: "Cure", th: "รักษาสถานะ", file: "Cure.wav", synth: "chime-up" },
-      { id: "ac-holylight", label: "Holy Light", th: "แสงศักดิ์สิทธิ์", synth: "holy" },
-      { id: "ac-pneuma", label: "Pneuma", th: "กันธนู", synth: "wind" },
-      { id: "ac-teleport", label: "Teleport", th: "เทเลพอร์ต", synth: "warp" },
+      { id: "heal", label: "Heal", th: "ฮีล", icon: "💚", file: "Heal.wav", synth: "chime-up" },
+      { id: "blessing", label: "Blessing", th: "อวยพร", icon: "🙏", file: "Blessing.wav", synth: "chime-up" },
+      { id: "increase-agi", label: "Increase AGI", th: "เพิ่มความเร็ว", icon: "👟", synth: "chime-up" },
+      { id: "decrease-agi", label: "Decrease AGI", th: "ลดความเร็ว", icon: "🐌", synth: "sleep" },
+      { id: "cure", label: "Cure", th: "รักษาสถานะ", icon: "🩹", file: "Cure.wav", synth: "chime-up" },
+      { id: "angelus", label: "Angelus", th: "เพิ่มเกราะ", icon: "😇", synth: "holy" },
+      { id: "signum-crucis", label: "Signum Crucis", th: "ลดเกราะอันเดด", icon: "✝️", synth: "holy" },
+      { id: "teleport", label: "Teleport", th: "เทเลพอร์ต", icon: "🌀", synth: "warp" },
+      { id: "warp-portal", label: "Warp Portal", th: "ประตูวาร์ป", icon: "🌌", synth: "warp" },
+      { id: "aqua-benedicta", label: "Aqua Benedicta", th: "น้ำมนต์", icon: "💧", synth: "potion" },
     ],
     class2Skills: [
-      { id: "ac-sanctuary", label: "Sanctuary", th: "เขตศักดิ์สิทธิ์", file: "Sanctuary.wav", synth: "holy" },
-      { id: "ac-kyrie", label: "Kyrie Eleison", th: "โล่ป้องกัน", file: "KyrieEleison.wav", synth: "endure" },
-      { id: "ac-magnificat", label: "Magnificat", th: "ฟื้น SP", file: "Magnificat.wav", synth: "chime-up" },
-      { id: "ac-gloria", label: "Gloria", th: "เพิ่มโชค", file: "Gloria.wav", synth: "chime-up" },
-      { id: "ac-lex", label: "Lex Aeterna", th: "ดาเมจสองเท่า", file: "LexAeterna.wav", synth: "holy" },
-      { id: "ac-aspersio", label: "Aspersio", th: "อาวุธธาตุศักดิ์สิทธิ์", file: "Aspersio.wav", synth: "holy" },
-      { id: "ac-bss", label: "B.S. Sacramenti", th: "เกราะศักดิ์สิทธิ์", file: "BSS.wav", synth: "holy" },
-      { id: "ac-impositio", label: "Impositio Manus", th: "เพิ่มพลังโจมตี", file: "Impositio.wav", synth: "chime-up" },
-      { id: "ac-recovery", label: "Status Recovery", th: "ล้างสถานะ", file: "StatusRecovery.wav", synth: "chime-up" },
-      { id: "ac-resurrection", label: "Resurrection", th: "ชุบชีวิต", file: "Resurrection.wav", synth: "respawn" },
-      { id: "ac-magnus", label: "Magnus Exorcismus", th: "ขับไล่ปีศาจ", file: "MagnusExorcismus.wav", synth: "holy" },
-      { id: "ac-assumptio", label: "Assumptio", th: "พรแห่งสวรรค์", file: "Assumptio.wav", synth: "holy" },
+      { id: "sanctuary", label: "Sanctuary", th: "เขตศักดิ์สิทธิ์", icon: "⛪", file: "Sanctuary.wav", synth: "holy" },
+      { id: "kyrie-eleison", label: "Kyrie Eleison", th: "โล่ป้องกัน", icon: "🛡️", file: "KyrieEleison.wav", synth: "endure" },
+      { id: "magnificat", label: "Magnificat", th: "ฟื้น SP", icon: "🎶", file: "Magnificat.wav", synth: "chime-up" },
+      { id: "gloria", label: "Gloria", th: "เพิ่มโชค", icon: "🍀", file: "Gloria.wav", synth: "chime-up" },
+      { id: "lex-aeterna", label: "Lex Aeterna", th: "ดาเมจสองเท่า", icon: "📜", file: "LexAeterna.wav", synth: "holy" },
+      { id: "aspersio", label: "Aspersio", th: "อาวุธศักดิ์สิทธิ์", icon: "💦", file: "Aspersio.wav", synth: "holy" },
+      { id: "bs-sacramenti", label: "B.S. Sacramenti", th: "เกราะศักดิ์สิทธิ์", icon: "🔰", file: "BSS.wav", synth: "holy" },
+      { id: "impositio-manus", label: "Impositio Manus", th: "เพิ่มพลังโจมตี", icon: "✋", file: "Impositio.wav", synth: "chime-up" },
+      { id: "suffragium", label: "Suffragium", th: "ร่ายเร็วขึ้น", icon: "📿", synth: "chime-up" },
+      { id: "recovery", label: "Recovery", th: "ล้างสถานะ", icon: "🌿", file: "StatusRecovery.wav", synth: "chime-up" },
+      { id: "slow-poison", label: "Slow Poison", th: "ชะลอพิษ", icon: "🧴", synth: "poison" },
+      { id: "resurrection", label: "Resurrection", th: "ชุบชีวิต", icon: "🕊️", file: "Resurrection.wav", synth: "respawn" },
+      { id: "magnus-exorcismus", label: "Magnus Exorcismus", th: "ขับไล่ปีศาจ", icon: "🌟", file: "MagnusExorcismus.wav", synth: "holy" },
     ],
   },
   {
     id: "archer",
     name: "Archer",
     th: "นักธนู",
+    icon: "🏹",
     class2: "Hunter / Bard / Dancer",
     accent: "#5fb85a",
     class1: [
-      { id: "ar-double", label: "Double Strafe", th: "ยิงสองดอก", synth: "double-arrow" },
-      { id: "ar-shower", label: "Arrow Shower", th: "ฝนธนู", synth: "arrow-rain" },
-      { id: "ar-concentration", label: "Improve Concentration", th: "เพิ่มสมาธิ", synth: "focus" },
-      { id: "ar-charge", label: "Charge Arrow", th: "ธนูผลักกระเด็น", synth: "arrow" },
+      { id: "double-strafe", label: "Double Strafe", th: "ยิงสองดอก", icon: "🏹", synth: "double-arrow" },
+      { id: "arrow-shower", label: "Arrow Shower", th: "ฝนธนู", icon: "🌧️", synth: "arrow-rain" },
+      { id: "improve-concentration", label: "Concentration", th: "เพิ่มสมาธิ", icon: "🎯", synth: "focus" },
+      { id: "charge-arrow", label: "Charge Arrow", th: "ธนูผลักกระเด็น", icon: "➡️", synth: "arrow" },
     ],
     class2Skills: [
-      { id: "ar-blitz", label: "Blitz Beat", th: "เหยี่ยวโจมตี", synth: "falcon" },
-      { id: "ar-snare", label: "Ankle Snare", th: "กับดักตรึง", synth: "trap" },
-      { id: "ar-riff", label: "Impressive Riff", th: "เพลงบาร์ด", file: "BD/ImpressiveRiff.wav", synth: "chime-up" },
-      { id: "ar-strings", label: "Magic Strings", th: "เพลงบาร์ด", file: "BD/MagicStrings.wav", synth: "chime-up" },
-      { id: "ar-lutie", label: "Song of Lutie", th: "เพลงบาร์ด", file: "BD/SongofLutie.wav", synth: "chime-up" },
-      { id: "ar-ladyluck", label: "Lady Luck", th: "ท่าเต้น", file: "BD/LadyLuck.wav", synth: "chime-up" },
-      { id: "ar-gypsy", label: "Gypsy's Kiss", th: "ท่าเต้น", file: "BD/GypsysKiss.wav", synth: "chime-up" },
-      { id: "ar-slowgrace", label: "Slow Grace", th: "ท่าเต้น", file: "BD/SlowGrace.wav", synth: "chime-up" },
+      { id: "blitz-beat", label: "Blitz Beat", th: "เหยี่ยวโจมตี", icon: "🦅", synth: "falcon" },
+      { id: "detect", label: "Detect", th: "เหยี่ยวค้นหา", icon: "🔍", synth: "falcon" },
+      { id: "ankle-snare", label: "Ankle Snare", th: "กับดักตรึง", icon: "🪤", synth: "trap" },
+      { id: "land-mine", label: "Land Mine", th: "กับดักระเบิด", icon: "💣", synth: "explosion" },
+      { id: "freezing-trap", label: "Freezing Trap", th: "กับดักน้ำแข็ง", icon: "🧊", synth: "freeze" },
+      { id: "sandman", label: "Sandman", th: "กับดักหลับ", icon: "😴", synth: "sleep" },
+      { id: "flasher", label: "Flasher", th: "กับดักแสง", icon: "📸", synth: "blind" },
+      { id: "impressive-riff", label: "Bard Song", th: "เพลงบาร์ด", icon: "🎸", file: "BD/ImpressiveRiff.wav", synth: "chime-up" },
+      { id: "lady-luck", label: "Dancer Song", th: "ท่าเต้น", icon: "💃", file: "BD/LadyLuck.wav", synth: "chime-up" },
+      { id: "lullaby", label: "Lullaby", th: "เพลงกล่อมหลับ", icon: "🎵", file: "BD/Lullaby.wav", synth: "sleep" },
     ],
   },
   {
     id: "merchant",
     name: "Merchant",
     th: "พ่อค้า",
-    class2: "Blacksmith / Alchemist",
+    icon: "💰",
+    class2: "Blacksmith",
     accent: "#d98b3a",
     class1: [
-      { id: "mc-mammonite", label: "Mammonite", th: "ทุ่มเงินตี", synth: "coins" },
-      { id: "mc-cartrev", label: "Cart Revolution", th: "เหวี่ยงรถเข็น", synth: "cart" },
-      { id: "mc-loud", label: "Loud Exclamation", th: "ตะโกนเพิ่มพลัง", synth: "shout" },
+      { id: "mammonite", label: "Mammonite", th: "ทุ่มเงินตี", icon: "💰", synth: "coins" },
+      { id: "cart-revolution", label: "Cart Revolution", th: "เหวี่ยงรถเข็น", icon: "🛒", synth: "cart" },
+      { id: "crazy-uproar", label: "Crazy Uproar", th: "ตะโกนเพิ่มพลัง", icon: "📢", synth: "shout" },
     ],
     class2Skills: [
-      { id: "mc-adrenaline", label: "Adrenaline Rush", th: "เร่งความเร็วโจมตี", file: "AdrenalineRush.wav", synth: "shout" },
-      { id: "mc-hammerfall", label: "Hammer Fall", th: "ทุบพื้นสตั้น", synth: "hammer" },
-      { id: "mc-acid", label: "Acid Terror", th: "ขวดกรด", synth: "poison" },
+      { id: "adrenaline-rush", label: "Adrenaline Rush", th: "เร่งโจมตี", icon: "💢", file: "AdrenalineRush.wav", synth: "shout" },
+      { id: "over-thrust", label: "Over Thrust", th: "เพิ่มพลังโจมตี", icon: "💪", synth: "shout" },
+      { id: "weapon-perfection", label: "Weapon Perfection", th: "อาวุธสมบูรณ์", icon: "⚒️", synth: "endure" },
+      { id: "maximize-power", label: "Maximize Power", th: "พลังสูงสุด", icon: "🔝", synth: "focus" },
+      { id: "hammer-fall", label: "Hammer Fall", th: "ทุบพื้นสตั้น", icon: "🔨", synth: "hammer" },
+      { id: "greed", label: "Greed", th: "เก็บของรอบตัว", icon: "🤑", synth: "coins" },
+      { id: "weapon-repair", label: "Weapon Repair", th: "ซ่อมอาวุธ", icon: "🔧", synth: "tick" },
     ],
   },
 ];
 
-export type EventGroup = { id: string; name: string; th: string; sounds: SoundDef[] };
-
-export const EVENT_GROUPS: EventGroup[] = [
-  {
-    id: "combat",
-    name: "Combat",
-    th: "การต่อสู้",
-    sounds: [
-      { id: "ev-attack", label: "Basic Attack", th: "โจมตีปกติ", synth: "slash" },
-      { id: "ev-ranged", label: "Ranged Attack", th: "โจมตีระยะไกล", synth: "arrow" },
-      { id: "ev-move", label: "Basic Move", th: "เดิน 2 ช่อง", synth: "footsteps" },
-      { id: "ev-hit", label: "Take Damage", th: "โดนโจมตี", synth: "hit" },
-      { id: "ev-crit", label: "Critical", th: "คริติคอล", synth: "crit" },
-      { id: "ev-miss", label: "Miss", th: "พลาด", synth: "miss" },
-      { id: "ev-knockback", label: "Knockback", th: "กระเด็น", synth: "heavy-hit" },
-      { id: "ev-heal", label: "Heal", th: "ฟื้น HP", file: "Heal.wav", synth: "chime-up" },
-    ],
-  },
-  {
-    id: "progress",
-    name: "Progression",
-    th: "เลเวล & สกิล",
-    sounds: [
-      { id: "ev-levelup", label: "Level Up", th: "เลเวลอัพ", synth: "levelup" },
-      { id: "ev-skillup", label: "Skill Up", th: "อัพสกิล", synth: "skillup" },
-      { id: "ev-jobchange", label: "Class Change", th: "เปลี่ยนอาชีพ", synth: "jobchange" },
-    ],
-  },
-  {
-    id: "items",
-    name: "Cards, Dice & Items",
-    th: "การ์ด ลูกเต๋า ไอเทม",
-    sounds: [
-      { id: "ev-dice", label: "Roll Dice", th: "ทอยลูกเต๋า", synth: "dice" },
-      { id: "ev-draw", label: "Draw Card", th: "จั่วการ์ด", synth: "card" },
-      { id: "ev-cooldown", label: "Cooldown Shift", th: "เลื่อน CD", synth: "tick" },
-      { id: "ev-potion", label: "Use Item", th: "ใช้ไอเทม", synth: "potion" },
-      { id: "ev-drop", label: "Item Drop", th: "ของดรอป", synth: "drop" },
-      { id: "ev-unique", label: "Unique Drop", th: "ดรอปของหายาก", synth: "rare-drop" },
-      { id: "ev-card", label: "Monster Card!", th: "ได้การ์ดมอนสเตอร์", synth: "jobchange" },
-    ],
-  },
-  {
-    id: "status",
-    name: "Status Effects",
-    th: "สถานะผิดปกติ",
-    sounds: [
-      { id: "st-blind", label: "Blind", th: "ตาบอด", synth: "blind" },
-      { id: "st-curse", label: "Curse", th: "คำสาป", synth: "curse" },
-      { id: "st-freeze", label: "Freeze", th: "แช่แข็ง", synth: "freeze" },
-      { id: "st-immobilize", label: "Immobilize", th: "ขยับไม่ได้", synth: "immobilize" },
-      { id: "st-poison", label: "Poison", th: "ติดพิษ", synth: "poison" },
-      { id: "st-sleep", label: "Sleep", th: "หลับ", synth: "sleep" },
-      { id: "st-stun", label: "Stun", th: "มึนงง", synth: "stun" },
-    ],
-  },
-  {
-    id: "scenario",
-    name: "Scenario",
-    th: "ฉาก & บอส",
-    sounds: [
-      { id: "ev-spawn", label: "Monster Spawn", th: "มอนเกิด", synth: "spawn" },
-      { id: "ev-kill", label: "Monster Defeated", th: "กำจัดมอน", synth: "pop" },
-      { id: "ev-mvp", label: "MVP Appears", th: "บอสปรากฏ", synth: "mvp" },
-      { id: "ev-death", label: "Character Dies", th: "ตัวละครตาย", synth: "death" },
-      { id: "ev-respawn", label: "Respawn", th: "เกิดใหม่", synth: "respawn" },
-      { id: "ev-victory", label: "Scenario Won", th: "ชนะฉาก", synth: "victory" },
-      { id: "ev-defeat", label: "Scenario Lost", th: "แพ้ฉาก", synth: "defeat" },
-    ],
-  },
+export const ALL_SOUNDS: SoundDef[] = [
+  ...COMMON_GROUPS.flatMap((g) => g.sounds),
+  ...CLASSES.flatMap((c) => [...c.class1, ...c.class2Skills]),
 ];
 
 export const ALL_SOUND_FILES: string[] = Array.from(
-  new Set(
-    [...CLASSES.flatMap((c) => [...c.class1, ...c.class2Skills]), ...EVENT_GROUPS.flatMap((g) => g.sounds)]
-      .map((s) => s.file)
-      .filter((f): f is string => Boolean(f)),
-  ),
+  new Set(ALL_SOUNDS.map((s) => s.file).filter((f): f is string => Boolean(f))),
 );

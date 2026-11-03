@@ -57,6 +57,8 @@ export type SynthId =
   | "sleep"
   | "stun"
   | "spawn"
+  | "refine-fail"
+  | "stone"
   | "monster-bite"
   | "monster-heavy";
 

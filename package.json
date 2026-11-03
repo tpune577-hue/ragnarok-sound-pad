@@ -8,8 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "fetch-audio": "node scripts/fetch-audio.ts",
-    "predev": "npm run fetch-audio",
-    "prebuild": "npm run fetch-audio"
+    "predev": "npm run fetch-audio && npm run index-pack",
+    "prebuild": "npm run fetch-audio && npm run index-pack",
+    "index-pack": "node scripts/index-pack.ts"
   },
   "dependencies": {
     "next": "16.4.4",

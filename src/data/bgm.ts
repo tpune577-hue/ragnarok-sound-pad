@@ -43,17 +43,18 @@ export type Scene = {
   id: SceneId;
   name: string;
   th: string;
+  icon: string;
   tracks: string[];
 };
 
 export const SCENES: Scene[] = [
-  { id: "title", name: "Title", th: "เปิดเกม", tracks: ["01"] },
-  { id: "city", name: "City Phase", th: "ในเมือง", tracks: ["08", "13", "14", "11"] },
-  { id: "ceremony", name: "Cathedral", th: "พิธีกรรม", tracks: ["28"] },
-  { id: "field", name: "Field", th: "ทุ่งนอกเมือง", tracks: ["12", "05", "04", "03", "25"] },
-  { id: "dungeon", name: "Dungeon", th: "ดันเจี้ยน", tracks: ["19", "20", "21", "22", "40"] },
-  { id: "mvp", name: "MVP Battle", th: "สู้บอส", tracks: ["44", "18", "66"] },
-  { id: "victory", name: "Victory", th: "ชนะ / เปลี่ยนอาชีพ", tracks: ["51", "02"] },
+  { id: "title", icon: "🏰", name: "Title", th: "เปิดเกม", tracks: ["01"] },
+  { id: "city", icon: "🏙️", name: "City Phase", th: "ในเมือง", tracks: ["08", "13", "14", "11"] },
+  { id: "ceremony", icon: "⛪", name: "Cathedral", th: "พิธีกรรม", tracks: ["28"] },
+  { id: "field", icon: "🌾", name: "Field", th: "ทุ่งนอกเมือง", tracks: ["12", "05", "04", "03", "25"] },
+  { id: "dungeon", icon: "🕳️", name: "Dungeon", th: "ดันเจี้ยน", tracks: ["19", "20", "21", "22", "40"] },
+  { id: "mvp", icon: "👹", name: "MVP Battle", th: "สู้บอส", tracks: ["44", "18", "66"] },
+  { id: "victory", icon: "🏆", name: "Victory", th: "ชนะ / เปลี่ยนอาชีพ", tracks: ["51", "02"] },
 ];
 
 export const bgmUrl = (id: string) => `/audio/bgm/${id}.mp3`;

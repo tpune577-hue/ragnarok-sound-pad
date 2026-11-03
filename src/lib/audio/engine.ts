@@ -11,8 +11,10 @@ export type EngineState = {
   scene?: SceneId;
   trackId?: string;
   bgmPlaying: boolean;
-  playing: ReadonlySet<string>;
+  /** Sound id → duration in seconds, for pad progress bars. */
+  playing: ReadonlyMap<string, number>;
   overrides: ReadonlySet<string>;
+  pack: Readonly<Record<string, string>>;
   settings: Settings;
 };
 
@@ -41,8 +43,9 @@ class AudioEngine {
   state: EngineState = {
     ready: false,
     bgmPlaying: false,
-    playing: new Set(),
+    playing: new Map(),
     overrides: new Set(),
+    pack: {},
     settings: DEFAULT_SETTINGS,
   };
 
@@ -80,6 +83,10 @@ class AudioEngine {
       this.applySettings(this.state.settings);
       listOverrides()
         .then((all) => this.set({ overrides: new Set(all.map((o) => o.id)) }))
+        .catch(() => {});
+      fetch("/audio/pack/index.json")
+        .then((r) => (r.ok ? r.json() : {}))
+        .then((pack) => this.set({ pack }))
         .catch(() => {});
     }
     await this.ctx.resume();
@@ -208,8 +215,9 @@ class AudioEngine {
       });
       if (buf) return buf;
     }
-    if (def.file) {
-      const url = sfxUrl(def.file);
+    const packUrl = this.state.pack[def.id];
+    const url = packUrl ?? (def.file ? sfxUrl(def.file) : undefined);
+    if (url) {
       return this.loadBuffer(url, async () => {
         const res = await fetch(url);
         return res.ok ? res.arrayBuffer() : null;
@@ -269,7 +277,7 @@ class AudioEngine {
       clearTimeout(timer);
       if (this.active.get(id) === entry) {
         this.active.delete(id);
-        const playing = new Set(this.state.playing);
+        const playing = new Map(this.state.playing);
         playing.delete(id);
         this.set({ playing });
       }
@@ -289,7 +297,7 @@ class AudioEngine {
     }, duration * 1000 + 150);
     const entry: Playing = { stop, long: duration > LONG_SOUND };
     this.active.set(id, entry);
-    this.set({ playing: new Set(this.state.playing).add(id) });
+    this.set({ playing: new Map(this.state.playing).set(id, duration) });
   }
 
   stopAllSfx() {

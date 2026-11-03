@@ -15,7 +15,7 @@ const body = Noto_Sans_Thai({
 });
 
 export const metadata: Metadata = {
-  title: "Ragnarok the Board Game – Sound Companion",
+  title: "Ragnarok the Board Game – Sound Pad",
   description: "BGM และเสียงเอฟเฟกต์ประกอบการเล่น Ragnarok the Board Game: Ceremony of Prontera",
   appleWebApp: { capable: true, title: "RO Companion", statusBarStyle: "black-translucent" },
 };
