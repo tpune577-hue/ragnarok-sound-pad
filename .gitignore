@@ -42,3 +42,5 @@ next-env.d.ts
 
 # copyrighted Ragnarok Online audio, fetched by `npm run fetch-audio`
 /public/audio
+
+/out

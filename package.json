@@ -10,7 +10,8 @@
     "fetch-audio": "node scripts/fetch-audio.ts",
     "predev": "npm run fetch-audio && npm run index-pack",
     "prebuild": "npm run fetch-audio && npm run index-pack",
-    "index-pack": "node scripts/index-pack.ts"
+    "index-pack": "node scripts/index-pack.ts",
+    "deploy": "NEXT_PUBLIC_BASE_PATH=/ragnarok-sound-pad npm run build && touch out/.nojekyll && cd out && rm -rf .git && git init -b gh-pages && git add -A && git commit -qm 'Deploy to GitHub Pages' && git push -f https://github.com/tpune577-hue/ragnarok-sound-pad.git gh-pages:gh-pages"
   },
   "dependencies": {
     "next": "16.4.4",
