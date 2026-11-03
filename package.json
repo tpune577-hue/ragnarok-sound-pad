@@ -1,12 +1,15 @@
 {
-  "name": "app",
+  "name": "ragnarok-companion",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "fetch-audio": "node scripts/fetch-audio.ts",
+    "predev": "npm run fetch-audio",
+    "prebuild": "npm run fetch-audio"
   },
   "dependencies": {
     "next": "16.4.4",
