@@ -215,13 +215,14 @@ class AudioEngine {
       });
       if (buf) return buf;
     }
-    const packUrl = this.state.pack[def.id];
-    const url = packUrl ?? (def.file ? sfxUrl(def.file) : undefined);
-    if (url) {
-      return this.loadBuffer(url, async () => {
+    const packUrl = this.state.pack[def.id] ?? `/audio/pack/${encodeURIComponent(def.id)}.wav`;
+    const candidates = def.file ? [packUrl, sfxUrl(def.file)] : [packUrl];
+    for (const url of candidates) {
+      const buf = await this.loadBuffer(url, async () => {
         const res = await fetch(url);
         return res.ok ? res.arrayBuffer() : null;
       });
+      if (buf) return buf;
     }
     return null;
   }
@@ -259,12 +260,31 @@ class AudioEngine {
     this.track(def.id, out, duration, src);
   }
 
-  playSteps(key: string, kind: StepKind, count: number, heavy = false) {
+  async playSteps(key: string, mobId: string, kind: StepKind, count: number, heavy = false) {
     const ctx = this.ctx;
     if (!ctx) return;
+    const stepId = `step-${mobId}`;
+    const stepUrl = this.state.pack[stepId] ?? `/audio/pack/${encodeURIComponent(stepId)}.wav`;
+    const stepBuf = await this.loadBuffer(stepUrl, async () => {
+      const res = await fetch(stepUrl);
+      return res.ok ? res.arrayBuffer() : null;
+    });
     const out = ctx.createGain();
     out.connect(this.sfxBus);
-    this.track(key, out, renderSteps(ctx, out, kind, count, heavy));
+    if (stepBuf) {
+      const gap = Math.min(Math.max(stepBuf.duration * 0.72, 0.22), 0.45);
+      const t0 = ctx.currentTime;
+      for (let i = 0; i < count; i++) {
+        const src = ctx.createBufferSource();
+        src.buffer = stepBuf;
+        src.playbackRate.value = 0.96 + Math.random() * 0.08;
+        src.connect(out);
+        src.start(t0 + i * gap);
+      }
+      this.track(key, out, (count - 1) * gap + stepBuf.duration);
+    } else {
+      this.track(key, out, renderSteps(ctx, out, kind, count, heavy));
+    }
   }
 
   private track(id: string, out: GainNode, duration: number, src?: AudioBufferSourceNode) {

@@ -13,7 +13,7 @@ function Segmented<T extends string>({
   value,
   onChange,
 }: {
-  options: { id: T; label: string }[];
+  options: { id: T; label: string; icon?: string }[];
   value: T;
   onChange: (v: T) => void;
 }) {
@@ -24,11 +24,15 @@ function Segmented<T extends string>({
           key={o.id}
           type="button"
           onClick={() => onChange(o.id)}
-          className={`h-11 flex-1 rounded-xl text-[15px] font-medium transition ${
+          className={`flex h-11 flex-1 items-center justify-center gap-2 rounded-xl text-[14px] font-semibold transition ${
             o.id === value ? "bg-gold text-ink" : "text-mist"
           }`}
         >
-          {o.label}
+          {o.icon && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={o.icon} alt="" className="size-5 object-contain [image-rendering:pixelated]" />
+          )}
+          <span>{o.label}</span>
         </button>
       ))}
     </div>
@@ -73,20 +77,26 @@ export function ClassScreen({ editMode }: { editMode: boolean }) {
                 type="button"
                 onClick={() => setActive(c.id)}
                 className={`flex h-16 flex-col items-center justify-center rounded-2xl border-2 transition ${
-                  on ? "" : "border-transparent bg-panel opacity-60"
+                  on ? "text-white" : "border-transparent bg-panel text-mist opacity-65"
                 }`}
-                style={on ? { borderColor: c.accent, background: `${c.accent}26` } : undefined}
+                style={on ? { borderColor: c.accent, background: `${c.accent}2b` } : undefined}
               >
-                <span className="text-2xl leading-none">{c.icon}</span>
-                <span className="mt-1 text-[10px] leading-none">{c.th}</span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={c.icon}
+                  alt={c.name}
+                  draggable={false}
+                  className="size-7 object-contain [image-rendering:pixelated]"
+                />
+                <span className="mt-1 text-[10px] leading-none font-medium">{c.th}</span>
               </button>
             );
           })}
         </div>
         <Segmented
           options={[
-            { id: "1", label: `Class 1 · ${cls.name}` },
-            { id: "2", label: `Class 2 · ${cls.class2.split(" / ")[0]}` },
+            { id: "1", label: `Class 1 · ${cls.name}`, icon: cls.icon },
+            { id: "2", label: `Class 2 · ${cls.class2.split(" / ")[0]}`, icon: cls.class2Icon },
           ]}
           value={tier}
           onChange={setTier}
@@ -117,12 +127,15 @@ export function MusicScreen() {
                 if (on) engine.nextInScene();
                 else engine.playScene(s.id);
               }}
-              className={`pad relative flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-3xl border-2 transition active:scale-[0.94] ${
-                on ? "border-gold" : "border-white/5"
+              className={`pad relative flex aspect-square w-full flex-col items-center justify-center gap-1.5 rounded-3xl border-2 transition active:scale-[0.94] ${
+                on ? "border-gold" : "border-white/10"
               }`}
             >
-              <span className="text-[44px] leading-none">{s.icon}</span>
-              <span className="mt-1 font-display text-base font-bold">{s.name}</span>
+              <span className="grid size-14 place-items-center rounded-2xl border border-white/15 bg-[#0c1022]/85">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={s.icon} alt="" draggable={false} className="size-11 object-contain" />
+              </span>
+              <span className="mt-0.5 font-display text-base font-bold">{s.name}</span>
               <span className="text-xs text-mist">{s.th}</span>
               {on && (
                 <span className="absolute top-3 right-3">
@@ -130,7 +143,7 @@ export function MusicScreen() {
                 </span>
               )}
               {on && s.tracks.length > 1 && (
-                <span className="absolute bottom-2 text-[10px] text-gold/80">แตะอีกครั้ง = เพลงถัดไป</span>
+                <span className="absolute bottom-2 text-[10px] text-gold/80">แตะซ้ำ = เพลงถัดไป</span>
               )}
             </button>
           );
@@ -188,8 +201,8 @@ export function MonsterScreen() {
       <StickyBar>
         <Segmented
           options={[
-            { id: "mob", label: "มอนสเตอร์" },
-            { id: "mvp", label: "👑 MVP" },
+            { id: "mob", label: "มอนสเตอร์ (26)", icon: "/icons/monsters/poring.png" },
+            { id: "mvp", label: "MVP Boss (16)", icon: "/icons/boardgame/mvp.gif" },
           ]}
           value={bosses}
           onChange={setBosses}
@@ -225,50 +238,84 @@ export function MonsterScreen() {
 function MonsterPad({ monster: m, hexes }: { monster: Monster; hexes: number }) {
   const [state, engine] = useEngine();
   const walkKey = `walk:${m.id}`;
-  const walking = state.playing.has(walkKey);
+  const atkKey = `atk-${m.id}`;
+  const killKey = `kill-${m.id}`;
+  const active =
+    state.playing.has(walkKey) || state.playing.has(atkKey) || state.playing.has(killKey);
   const tap = (fn: () => void) => () => {
     haptic();
     fn();
   };
   return (
     <div
-      className={`pad flex aspect-square flex-col overflow-hidden rounded-3xl border-2 ${walking ? "is-playing" : "border-white/5"}`}
-      style={{ "--accent": m.color, borderColor: walking ? m.color : undefined } as React.CSSProperties}
+      className={`pad relative flex aspect-square flex-col overflow-hidden rounded-3xl border-2 ${
+        active ? "is-playing" : "border-white/10"
+      }`}
+      style={{ "--accent": m.color, borderColor: active ? m.color : undefined } as React.CSSProperties}
     >
+      {m.mvp && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src="/icons/boardgame/mvp.gif"
+          alt="MVP"
+          draggable={false}
+          className="pointer-events-none absolute top-2 left-2.5 z-10 h-6 w-auto drop-shadow"
+        />
+      )}
+      <span className="pointer-events-none absolute top-3 right-3 size-2 rounded-full bg-[#7ee08a]" />
       <button
         type="button"
-        onPointerDown={tap(() => engine.playSteps(walkKey, m.step, hexes, m.mvp))}
-        className="flex flex-1 touch-manipulation flex-col items-center justify-center gap-1 px-2 active:bg-white/5"
+        onPointerDown={tap(() => void engine.playSteps(walkKey, m.id, m.step, hexes, m.mvp))}
+        className="flex flex-1 touch-manipulation flex-col items-center justify-center gap-1 px-2 pt-2 active:bg-white/5"
       >
-        <span
-          className="grid size-14 place-items-center rounded-full font-display text-lg font-extrabold text-ink shadow-lg"
-          style={{ background: m.color }}
-        >
-          {m.name.slice(0, 2)}
+        <span className="grid h-18 w-full place-items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={m.sprite}
+            alt={m.name}
+            draggable={false}
+            className="h-16 w-auto max-w-24 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)] select-none [image-rendering:pixelated]"
+          />
         </span>
-        <span className="mt-1 line-clamp-1 font-display text-[15px] font-bold">{m.name}</span>
-        <span className="text-[11px] text-mist">
-          👣 {hexes} ช่อง · {STEP_KIND_LABEL[m.step]}
+        <span className="line-clamp-1 font-display text-[14px] leading-tight font-bold text-white">{m.name}</span>
+        <span className="line-clamp-1 text-[11px] text-mist">
+          {m.th} · เดิน {hexes} ช่อง ({STEP_KIND_LABEL[m.step]})
         </span>
       </button>
-      <div className="grid h-12 grid-cols-2 border-t border-white/10 text-sm">
+      <div className="grid h-11 grid-cols-2 border-t border-white/10 text-xs font-medium">
         <button
           type="button"
           onPointerDown={tap(
-            () => void engine.playSound({ id: `atk:${m.id}`, label: "", icon: "", synth: m.mvp ? "monster-heavy" : "monster-bite" }),
+            () =>
+              void engine.playSound({
+                id: atkKey,
+                label: m.name,
+                icon: m.sprite,
+                synth: m.mvp ? "monster-heavy" : "monster-bite",
+              }),
           )}
-          className="touch-manipulation active:bg-white/10"
+          className="flex touch-manipulation items-center justify-center gap-1.5 text-white/90 active:bg-white/10"
         >
-          ⚔️ โจมตี
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icons/items/sword.png" alt="" className="size-4 [image-rendering:pixelated]" />
+          <span>โจมตี</span>
         </button>
         <button
           type="button"
           onPointerDown={tap(
-            () => void engine.playSound({ id: `kill:${m.id}`, label: "", icon: "", synth: m.mvp ? "victory" : "pop" }),
+            () =>
+              void engine.playSound({
+                id: killKey,
+                label: m.name,
+                icon: m.sprite,
+                synth: m.mvp ? "victory" : "pop",
+              }),
           )}
-          className="touch-manipulation border-l border-white/10 active:bg-white/10"
+          className="flex touch-manipulation items-center justify-center gap-1.5 border-l border-white/10 text-white/90 active:bg-white/10"
         >
-          💫 ตาย
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icons/items/skull.png" alt="" className="size-4 [image-rendering:pixelated]" />
+          <span>ตาย</span>
         </button>
       </div>
     </div>
@@ -306,10 +353,11 @@ export function SettingsScreen({ editMode, setEditMode }: { editMode: boolean; s
         <Toggle label="ลดเพลงลงขณะเล่นเอฟเฟกต์" checked={s.duck} onChange={(v) => engine.updateSettings({ duck: v })} />
       </Card>
 
-      <Card title="เปลี่ยนเสียงเอง">
-        <Toggle label="โหมดแก้ไข: แตะปุ่มเพื่ออัปโหลดไฟล์เสียง" checked={editMode} onChange={setEditMode} />
+      <Card title="คลังเสียงและโหมดแก้ไข">
+        <Toggle label="โหมดแก้ไข: แตะปุ่มเพื่ออัปโหลดไฟล์เสียงแทน" checked={editMode} onChange={setEditMode} />
         <p className="text-xs text-mist">
-          เก็บในเครื่องนี้ {state.overrides.size} ปุ่ม · Sound pack บนเซิร์ฟเวอร์ {packCount}/{ALL_SOUNDS.length} ปุ่ม
+          ติดตั้งเสียงจาก Playlist แล้ว {packCount} ไฟล์ (ครบทั้ง {ALL_SOUNDS.length} ปุ่ม + เสียงมอนสเตอร์เดิน/โจมตี/ตาย) · อัปโหลดแทนที่เอง{" "}
+          {state.overrides.size} ปุ่ม
         </p>
         <button
           type="button"
@@ -327,19 +375,19 @@ export function SettingsScreen({ editMode, setEditMode }: { editMode: boolean; s
       <Card title="สีจุดมุมปุ่ม">
         <ul className="space-y-1.5 text-sm text-mist">
           <li>
-            <Dot c="#7ee08a" /> เสียงจริงจากเกม
+            <Dot c="#7ee08a" /> เสียงจริงจากเกม Ragnarok Online (Playlist + iRO Wiki)
           </li>
           <li>
-            <Dot c="#59607f" /> เสียงชั่วคราว (รอไฟล์จริง)
+            <Dot c="#f0c04a" /> เสียงที่อัปโหลดเองในเครื่องนี้
           </li>
           <li>
-            <Dot c="#f0c04a" /> อัปโหลดเอง
+            <Dot c="#59607f" /> เสียงสังเคราะห์สำรอง
           </li>
         </ul>
       </Card>
 
       <p className="px-1 text-xs leading-relaxed text-mist">
-        เพลงและเสียง Ragnarok Online เป็นลิขสิทธิ์ของ Gravity Co., Ltd. ใช้เพื่อทำต้นแบบเท่านั้น
+        เพลง เสียงเอฟเฟกต์ และไอคอนจาก Ragnarok Online เป็นลิขสิทธิ์ของ Gravity Co., Ltd. ใช้เพื่อทำต้นแบบสำหรับบอร์ดเกมเท่านั้น
       </p>
     </div>
   );

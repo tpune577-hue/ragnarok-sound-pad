@@ -8,11 +8,11 @@ import { haptic } from "./pad";
 import { ClassScreen, CommonScreen, Equalizer, MonsterScreen, MusicScreen, SettingsScreen } from "./screens";
 
 const TABS = [
-  { id: "common", icon: "⚡", label: "ทั่วไป" },
-  { id: "classes", icon: "🗡️", label: "สกิล" },
-  { id: "monsters", icon: "👾", label: "มอนสเตอร์" },
-  { id: "music", icon: "🎵", label: "เพลง" },
-  { id: "settings", icon: "⚙️", label: "ตั้งค่า" },
+  { id: "common", icon: "/icons/items/angel-wing.png", label: "ทั่วไป" },
+  { id: "classes", icon: "/icons/jobs/swordsman.png", label: "สกิล" },
+  { id: "monsters", icon: "/icons/monsters/poring.png", label: "มอนสเตอร์" },
+  { id: "music", icon: "/icons/items/emperium.png", label: "เพลง" },
+  { id: "settings", icon: "/icons/skills/weapon-repair.png", label: "ตั้งค่า" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -29,20 +29,36 @@ export function Companion() {
         onClick={async () => {
           await engine.unlock();
           engine.playScene("title");
-          engine.preload(ALL_SOUNDS);
+          engine.preload(ALL_SOUNDS.slice(0, 24));
         }}
-        className="flex min-h-dvh w-full flex-col items-center justify-center gap-5 px-6 text-center"
+        className="relative flex min-h-dvh w-full flex-col items-center justify-center gap-4 overflow-hidden px-6 text-center"
       >
-        <span className="text-6xl">🏰</span>
-        <p className="font-display text-xs tracking-[0.35em] text-gold/80">RAGNAROK THE BOARD GAME</p>
-        <h1 className="font-display text-4xl leading-tight font-extrabold text-gold-soft">
-          Ceremony
-          <br />
-          of Prontera
-        </h1>
-        <p className="text-mist">Sound Pad</p>
-        <span className="mt-8 flex h-16 w-full max-w-xs items-center justify-center rounded-full bg-gold text-lg font-bold text-ink shadow-[0_0_40px_rgba(216,180,90,0.35)]">
-          แตะเพื่อเริ่ม ▶
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/icons/boardgame/prontera-bg.png"
+          alt=""
+          draggable={false}
+          className="pointer-events-none absolute inset-0 size-full object-cover opacity-15"
+        />
+        <div className="relative flex flex-col items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/icons/boardgame/cover.png"
+            alt="Ragnarok the Board Game"
+            draggable={false}
+            className="w-full max-w-xs rounded-3xl border border-gold/40 object-cover shadow-[0_12px_40px_rgba(0,0,0,0.65)]"
+          />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/icons/boardgame/logo.png"
+            alt="Ragnarok the Board Game: Ceremony of Prontera"
+            draggable={false}
+            className="w-full max-w-xs object-contain drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]"
+          />
+          <p className="font-display text-xs tracking-[0.3em] text-gold-soft/90 uppercase">Official Sound Pad</p>
+        </div>
+        <span className="relative mt-4 flex h-16 w-full max-w-xs items-center justify-center rounded-full bg-gold text-lg font-bold text-ink shadow-[0_0_40px_rgba(216,180,90,0.4)]">
+          แตะเพื่อเริ่มผจญภัย
         </span>
       </button>
     );
@@ -55,18 +71,20 @@ export function Companion() {
   return (
     <div className="mx-auto min-h-dvh max-w-3xl">
       <header className="sticky top-0 z-20 bg-ink/95 pt-[env(safe-area-inset-top)] backdrop-blur">
-        <div className="flex h-14 items-center gap-3 px-4">
-          <h1 className="flex-1 font-display text-xl font-bold text-gold-soft">
-            {current.icon} {current.label}
-          </h1>
+        <div className="flex h-14 items-center gap-2.5 px-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={current.icon} alt="" className="size-6 object-contain [image-rendering:pixelated]" />
+          <h1 className="flex-1 font-display text-lg font-bold text-gold-soft">{current.label}</h1>
           {editMode && <span className="rounded-full bg-gold/20 px-3 py-1 text-xs text-gold-soft">โหมดแก้ไข</span>}
           {state.playing.size > 0 && (
             <button
               type="button"
               onClick={() => engine.stopAllSfx()}
-              className="h-9 rounded-full border border-line px-4 text-sm text-mist"
+              className="flex h-9 items-center gap-1.5 rounded-full border border-line bg-panel px-3.5 text-xs font-medium text-white"
             >
-              ■ หยุดเสียง
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icons/boardgame/status-blind.png" alt="" className="size-4 object-contain" />
+              <span>หยุดเสียง</span>
             </button>
           )}
         </div>
@@ -87,8 +105,13 @@ export function Companion() {
             onClick={() => setTab("music")}
             className="flex min-w-0 flex-1 items-center gap-3 text-left"
           >
-            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-panel-2 text-xl">
-              {scene?.icon ?? "🎵"}
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-panel-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={scene?.icon ?? "/icons/items/emperium.png"}
+                alt=""
+                className="size-7 object-contain"
+              />
             </span>
             <span className="min-w-0">
               <span className="flex items-center gap-2">
@@ -97,24 +120,26 @@ export function Companion() {
                 </span>
                 {track && <Equalizer playing={state.bgmPlaying} />}
               </span>
-              <span className="block truncate text-xs text-mist">{scene ? `${scene.th} · ${track?.location}` : "เลือกฉากในแท็บเพลง"}</span>
+              <span className="block truncate text-xs text-mist">
+                {scene ? `${scene.th} · ${track?.location}` : "เลือกฉากในแท็บเพลง"}
+              </span>
             </span>
           </button>
           <button
             type="button"
             onClick={() => engine.nextInScene()}
             aria-label="เพลงถัดไป"
-            className="grid size-11 place-items-center rounded-full text-lg text-mist"
+            className="grid size-11 place-items-center rounded-full border border-line bg-panel text-xs font-bold text-mist"
           >
-            ⏭
+            NEXT
           </button>
           <button
             type="button"
             onClick={() => engine.toggleBgm()}
             aria-label={state.bgmPlaying ? "หยุดเพลง" : "เล่นเพลง"}
-            className="grid size-12 place-items-center rounded-full bg-gold text-lg text-ink"
+            className="grid size-12 place-items-center rounded-full bg-gold font-display text-xs font-extrabold text-ink"
           >
-            {state.bgmPlaying ? "❚❚" : "▶"}
+            {state.bgmPlaying ? "PAUSE" : "PLAY"}
           </button>
         </div>
         <nav className="grid grid-cols-5">
@@ -131,8 +156,16 @@ export function Companion() {
                 }}
                 className={`flex h-16 flex-col items-center justify-center gap-1 ${on ? "text-gold-soft" : "text-mist"}`}
               >
-                <span className={`text-2xl leading-none transition ${on ? "scale-110" : "opacity-60 grayscale"}`}>{t.icon}</span>
-                <span className="text-[11px]">{t.label}</span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={t.icon}
+                  alt=""
+                  draggable={false}
+                  className={`size-6 object-contain transition [image-rendering:pixelated] ${
+                    on ? "scale-110" : "opacity-55 grayscale"
+                  }`}
+                />
+                <span className="text-[11px] font-medium">{t.label}</span>
               </button>
             );
           })}

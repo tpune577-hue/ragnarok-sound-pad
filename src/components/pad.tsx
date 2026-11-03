@@ -29,6 +29,8 @@ export function SoundPad({ sound, accent = "#d8b45a", editMode }: Props) {
     engine.overrideChanged(sound.id, true);
   }
 
+  const isPixelIcon = sound.icon.includes("/skills/") || sound.icon.includes("/items/");
+
   return (
     <div className="relative" style={{ "--accent": accent } as React.CSSProperties}>
       <button
@@ -39,15 +41,33 @@ export function SoundPad({ sound, accent = "#d8b45a", editMode }: Props) {
           else if (e.detail === 0) play();
         }}
         onContextMenu={(e) => e.preventDefault()}
-        className={`pad relative flex aspect-square w-full touch-manipulation flex-col items-center justify-center gap-1 overflow-hidden rounded-3xl border-2 px-2 text-center transition-transform duration-75 active:scale-[0.94] ${
-          duration !== undefined ? "is-playing border-(--accent)" : "border-white/5"
+        className={`pad relative flex aspect-square w-full touch-manipulation flex-col items-center justify-center gap-1.5 overflow-hidden rounded-3xl border-2 px-2 text-center transition-transform duration-75 active:scale-[0.94] ${
+          duration !== undefined ? "is-playing border-(--accent)" : "border-white/10"
         } ${editMode ? "border-dashed border-gold/50" : ""}`}
       >
-        <span className="text-[42px] leading-none drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]" aria-hidden>
-          {sound.icon}
+        <span
+          className="relative grid size-14 place-items-center rounded-2xl border border-white/15 bg-[#0c1022]/85 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.45)]"
+          style={{
+            boxShadow:
+              duration !== undefined
+                ? `0 0 18px color-mix(in srgb, ${accent} 60%, transparent), inset 0 1px 0 rgba(255,255,255,0.2)`
+                : undefined,
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={sound.icon}
+            alt=""
+            draggable={false}
+            className={`object-contain select-none ${
+              isPixelIcon ? "size-9 [image-rendering:pixelated]" : "size-11"
+            }`}
+          />
         </span>
-        <span className="mt-1 font-display text-[15px] leading-tight font-bold text-white">{sound.label}</span>
-        <span className="line-clamp-1 text-[12px] text-mist">{editMode ? "แตะเพื่ออัปโหลด" : sound.th}</span>
+        <span className="mt-0.5 line-clamp-1 font-display text-[14px] leading-tight font-bold text-white">
+          {sound.label}
+        </span>
+        <span className="line-clamp-1 text-[11px] text-mist">{editMode ? "แตะเพื่ออัปโหลด" : sound.th}</span>
         <SourceDot source={source} />
         {duration !== undefined && (
           <span
