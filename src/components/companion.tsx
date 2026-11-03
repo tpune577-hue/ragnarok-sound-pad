@@ -8,11 +8,11 @@ import { haptic } from "./pad";
 import { ClassScreen, CommonScreen, Equalizer, MonsterScreen, MusicScreen, SettingsScreen } from "./screens";
 
 const TABS = [
-  { id: "common", icon: "/icons/items/angel-wing.png", label: "ทั่วไป" },
-  { id: "classes", icon: "/icons/jobs/swordsman.png", label: "สกิล" },
-  { id: "monsters", icon: "/icons/monsters/poring.png", label: "มอนสเตอร์" },
-  { id: "music", icon: "/icons/items/emperium.png", label: "เพลง" },
-  { id: "settings", icon: "/icons/skills/weapon-repair.png", label: "ตั้งค่า" },
+  { id: "common", icon: "icons/items/angel-wing.png", label: "ทั่วไป" },
+  { id: "classes", icon: "icons/jobs/swordsman.png", label: "สกิล" },
+  { id: "monsters", icon: "icons/monsters/poring.png", label: "มอนสเตอร์" },
+  { id: "music", icon: "icons/items/emperium.png", label: "เพลง" },
+  { id: "settings", icon: "icons/skills/weapon-repair.png", label: "ตั้งค่า" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -35,7 +35,7 @@ export function Companion() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/icons/boardgame/prontera-bg.png"
+          src="icons/boardgame/prontera-bg.png"
           alt=""
           draggable={false}
           className="pointer-events-none absolute inset-0 size-full object-cover opacity-15"
@@ -43,7 +43,7 @@ export function Companion() {
         <div className="relative flex flex-col items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/icons/boardgame/cover.png?v=2"
+            src="icons/boardgame/cover.png?v=2"
             alt="Ragnarok the Board Game: Ceremony of Prontera"
             draggable={false}
             className="w-full max-w-xs rounded-3xl border border-gold/40 object-cover shadow-[0_12px_40px_rgba(0,0,0,0.65)]"
@@ -76,7 +76,7 @@ export function Companion() {
               className="flex h-9 items-center gap-1.5 rounded-full border border-line bg-panel px-3.5 text-xs font-medium text-white"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/icons/boardgame/status-blind.png" alt="" className="size-4 object-contain" />
+              <img src="icons/boardgame/status-blind.png" alt="" className="size-4 object-contain" />
               <span>หยุดเสียง</span>
             </button>
           )}
@@ -101,7 +101,7 @@ export function Companion() {
             <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-panel-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={scene?.icon ?? "/icons/items/emperium.png"}
+                src={scene?.icon ?? "icons/items/emperium.png"}
                 alt=""
                 className="size-7 object-contain"
               />

@@ -84,7 +84,7 @@ class AudioEngine {
       listOverrides()
         .then((all) => this.set({ overrides: new Set(all.map((o) => o.id)) }))
         .catch(() => {});
-      fetch("/audio/pack/index.json")
+      fetch("audio/pack/index.json")
         .then((r) => (r.ok ? r.json() : {}))
         .then((pack) => this.set({ pack }))
         .catch(() => {});
@@ -215,7 +215,7 @@ class AudioEngine {
       });
       if (buf) return buf;
     }
-    const packUrl = this.state.pack[def.id] ?? `/audio/pack/${encodeURIComponent(def.id)}.wav`;
+    const packUrl = this.state.pack[def.id] ?? `audio/pack/${encodeURIComponent(def.id)}.wav`;
     const candidates = def.file ? [packUrl, sfxUrl(def.file)] : [packUrl];
     for (const url of candidates) {
       const buf = await this.loadBuffer(url, async () => {
@@ -264,7 +264,7 @@ class AudioEngine {
     const ctx = this.ctx;
     if (!ctx) return;
     const stepId = `step-${mobId}`;
-    const stepUrl = this.state.pack[stepId] ?? `/audio/pack/${encodeURIComponent(stepId)}.wav`;
+    const stepUrl = this.state.pack[stepId] ?? `audio/pack/${encodeURIComponent(stepId)}.wav`;
     const stepBuf = await this.loadBuffer(stepUrl, async () => {
       const res = await fetch(stepUrl);
       return res.ok ? res.arrayBuffer() : null;

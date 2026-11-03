@@ -201,8 +201,8 @@ export function MonsterScreen() {
       <StickyBar>
         <Segmented
           options={[
-            { id: "mob", label: "มอนสเตอร์ (26)", icon: "/icons/monsters/poring.png" },
-            { id: "mvp", label: "MVP Boss (16)", icon: "/icons/boardgame/mvp.gif" },
+            { id: "mob", label: "มอนสเตอร์ (26)", icon: "icons/monsters/poring.png" },
+            { id: "mvp", label: "MVP Boss (16)", icon: "icons/boardgame/mvp.gif" },
           ]}
           value={bosses}
           onChange={setBosses}
@@ -256,7 +256,7 @@ function MonsterPad({ monster: m, hexes }: { monster: Monster; hexes: number }) 
       {m.mvp && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src="/icons/boardgame/mvp.gif"
+          src="icons/boardgame/mvp.gif"
           alt="MVP"
           draggable={false}
           className="pointer-events-none absolute top-2 left-2.5 z-10 h-6 w-auto drop-shadow"
@@ -297,7 +297,7 @@ function MonsterPad({ monster: m, hexes }: { monster: Monster; hexes: number }) 
           className="flex touch-manipulation items-center justify-center gap-1.5 text-white/90 active:bg-white/10"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/icons/items/sword.png" alt="" className="size-4 [image-rendering:pixelated]" />
+          <img src="icons/items/sword.png" alt="" className="size-4 [image-rendering:pixelated]" />
           <span>โจมตี</span>
         </button>
         <button
@@ -314,7 +314,7 @@ function MonsterPad({ monster: m, hexes }: { monster: Monster; hexes: number }) 
           className="flex touch-manipulation items-center justify-center gap-1.5 border-l border-white/10 text-white/90 active:bg-white/10"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/icons/items/skull.png" alt="" className="size-4 [image-rendering:pixelated]" />
+          <img src="icons/items/skull.png" alt="" className="size-4 [image-rendering:pixelated]" />
           <span>ตาย</span>
         </button>
       </div>

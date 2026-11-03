@@ -11,7 +11,7 @@ const index: Record<string, string> = {};
 for (const name of await readdir(dir)) {
   const { name: id, ext } = path.parse(name);
   if (![".mp3", ".wav", ".ogg", ".m4a"].includes(ext.toLowerCase())) continue;
-  index[id] = `/audio/pack/${encodeURIComponent(name)}`;
+  index[id] = `audio/pack/${encodeURIComponent(name)}`;
 }
 
 await writeFile(path.join(dir, "index.json"), JSON.stringify(index, null, 2));
